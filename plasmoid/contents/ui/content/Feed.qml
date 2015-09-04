@@ -120,51 +120,46 @@ Row {
   function moveNext(){
     if(isAnimating){
       delayedNext++;
-    }else{
-      isAnimating = true;
-      currentIndex++;
-      if(currentIndex == model.count){
-        currentIndex = 0;
-      }
-
-      var duration =  getDuration();
-      var newNews = createNewNews(1, duration);
-
-      news.movementDuration = duration;
-      news.x = news.x - news.width;
-      newNews.x = newNews.x - newNews.width;
-
-      animation.interval = duration;
-      animation.running = true;
-
-      news.destroy(duration);
-      news = newNews;
+      return;
     }
+
+    isAnimating = true;
+    currentIndex++;
+    if(currentIndex == model.count){
+      currentIndex = 0;
+    }
+
+    move(1);
   }
 
   function movePrev(){
     if(isAnimating){
       delayedPrev++;
-    }else{
-      isAnimating = true;
-      currentIndex--;
-      if(currentIndex < 0){
-        currentIndex = model.count - 1;
-      }
-
-      var duration =  getDuration();
-      var newNews = createNewNews(-1, duration);
-
-      news.movementDuration = duration;
-      news.x = news.x + news.width;
-      newNews.x = newNews.x + newNews.width;
-
-      animation.interval = duration;
-      animation.running = true;
-
-      news.destroy(duration);
-      news = newNews;
+      return;
     }
+
+    isAnimating = true;
+    currentIndex--;
+    if(currentIndex < 0){
+      currentIndex = model.count - 1;
+    }
+
+    move(-1);
+  }
+
+  function move(direction){
+    var duration =  getDuration();
+    var newNews = createNewNews(direction, duration);
+
+    news.movementDuration = duration;
+    news.x = news.x - (direction * news.width);
+    newNews.x = newNews.x - (direction * newNews.width);
+
+    animation.interval = duration;
+    animation.running = true;
+
+    news.destroy(duration);
+    news = newNews;
   }
 
   function animationComplete(){
@@ -195,7 +190,6 @@ Row {
 }
 
 //TODO:
-//unite move methods
 //animate arrows opacity
 //clicking on feed should open link
 //busy indicator for loading rss
