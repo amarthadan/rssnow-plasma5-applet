@@ -195,7 +195,7 @@ Row {
 }
 
 //TODO:
-//add timer for scrolling
 //unite move methods
 //animate arrows opacity
 //clicking on feed should open link
+//busy indicator for loading rss

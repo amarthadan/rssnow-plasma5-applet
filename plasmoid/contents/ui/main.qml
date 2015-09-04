@@ -68,6 +68,14 @@ Item{
           XmlRole { name: "link"; query: "link/string()" }
           XmlRole { name: "pubDate"; query: "pubDate/string()" }
         }
+
+        Timer{
+          id: switchTimer
+          interval: switchInterval * 1000
+          running: true
+          repeat: true
+          onTriggered: moveNext()
+        }
       }
     }
   }
