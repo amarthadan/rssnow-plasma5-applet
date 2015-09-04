@@ -65,6 +65,9 @@ Row {
         movePrev();
       }
     }
+    onClicked: {
+      Qt.openUrlExternally(parent.model.get(currentIndex).link);
+    }
   }
 
   Timer{
@@ -191,5 +194,5 @@ Row {
 
 //TODO:
 //animate arrows opacity
-//clicking on feed should open link
 //busy indicator for loading rss
+//stop switch timer when mouse hovers over feed

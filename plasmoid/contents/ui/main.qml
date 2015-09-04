@@ -83,3 +83,4 @@ Item{
 
 //TODO:
 //add drop target
+//make all the feeds switch news at the same time
