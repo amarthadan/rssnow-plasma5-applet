@@ -2,6 +2,7 @@ import QtQuick 2.1
 import QtQuick.XmlListModel 2.0
 import QtQuick.Layouts 1.2
 import org.kde.plasma.components 2.0 as PlasmaComponents
+import QtQuick.Controls 1.4 as QtControls
 
 Row {
   id: feedRow
@@ -18,6 +19,11 @@ Row {
 
   Component.onCompleted: {
     createNewsIfModelLoaded();
+  }
+
+  QtControls.BusyIndicator {
+    anchors.fill: parent
+    running: parent.model.status != XmlListModel.Ready
   }
 
   Image{
@@ -202,5 +208,5 @@ Row {
 }
 
 //TODO:
-//busy indicator for loading rss
 //stop switch timer when mouse hovers over feed
+//fix anchor errors

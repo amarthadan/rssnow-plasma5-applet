@@ -1,6 +1,6 @@
 import QtQuick 2.0
-import QtQuick.Controls 1.2 as QtControls
-import QtQuick.Layouts 1.0 as QtLayouts
+import QtQuick.Controls 1.4 as QtControls
+import QtQuick.Layouts 1.2 as QtLayouts
 
 Item {
   id: generalPage
