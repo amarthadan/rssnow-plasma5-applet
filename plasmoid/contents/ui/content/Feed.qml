@@ -26,7 +26,7 @@ Row {
     height: 14
     anchors.right: parent.right
     anchors.top: parent.top
-    //opacity: 0
+    opacity: 0
     z: 42
     Behavior on opacity { PropertyAnimation {} }
     source: "../img/arrows.svgz"
@@ -42,7 +42,7 @@ Row {
     height: 14
     anchors.right: parent.right
     anchors.bottom: parent.bottom
-    //opacity: 0
+    opacity: 0
     z: 42
     Behavior on opacity { PropertyAnimation {} }
     source: "../img/arrows.svgz"
@@ -55,6 +55,7 @@ Row {
 
   MouseArea {
     anchors.fill: parent
+    hoverEnabled: true
     onWheel: {
       if (wheel.angleDelta.y < 0){
         //down
@@ -67,6 +68,14 @@ Row {
     }
     onClicked: {
       Qt.openUrlExternally(parent.model.get(currentIndex).link);
+    }
+    onEntered: {
+      rightArrow.opacity = 1;
+      leftArrow.opacity = 1;
+    }
+    onExited: {
+      rightArrow.opacity = 0;
+      leftArrow.opacity = 0;
     }
   }
 
@@ -193,6 +202,5 @@ Row {
 }
 
 //TODO:
-//animate arrows opacity
 //busy indicator for loading rss
 //stop switch timer when mouse hovers over feed
