@@ -1,9 +1,11 @@
 import QtQuick 2.1
 import QtQuick.Controls 1.4
+import QtQuick.Layouts 1.2
 import org.kde.plasma.components 2.0 as PlasmaComponents
 import org.kde.plasma.core 2.0 as PlasmaCore
 
 Item{
+  id: news
   width: parent.width
   height: parent.height
 
@@ -18,25 +20,41 @@ Item{
   Rectangle{
     anchors.fill: parent
     color: theme.backgroundColor
-  }
 
-  Image{
-    id: icon
-    source: "http://www.google.com/s2/favicons?domain=" + iconSource
-  }
+    ColumnLayout{
+      anchors.fill: parent
 
-  Label{
-    id: newsText
-    anchors.fill: parent
-    text: parent.currentNews.title
-    wrapMode: Text.WordWrap
-  }
+      RowLayout{
+        Layout.fillHeight: true
+        Layout.fillWidth: true
 
-  Label{
-    id: title
-    anchors.fill: parent
-    text: parent.feedTitle
-    wrapMode: Text.WordWrap
+        Image{
+          source: "http://www.google.com/s2/favicons?domain=" + news.iconSource
+        }
+
+        Label{
+          text: "(" + news.numberOfNews + "/" + news.currentNewsNumber + ")"
+          wrapMode: Text.WordWrap
+          font.bold: true
+        }
+
+        Label{
+          Layout.fillWidth: true
+          text: news.feedTitle
+          wrapMode: Text.WordWrap
+          font.bold: true
+        }
+      }
+
+      RowLayout{
+        Label{
+          Layout.fillHeight: true
+          Layout.fillWidth: true
+          text: news.currentNews.title
+          wrapMode: Text.WordWrap
+        }
+      }
+    }
   }
 
   Behavior on x {
@@ -47,5 +65,6 @@ Item{
 }
 
 //TODO:
-//change design to match old RSSNOW
 //states for animation
+//dummy icon when no icon available and while loading
+//change feed title to date info on hover

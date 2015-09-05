@@ -1,6 +1,5 @@
 import QtQuick 2.1
 import QtQuick.XmlListModel 2.0
-import QtQuick.Layouts 1.2
 import org.kde.plasma.components 2.0 as PlasmaComponents
 import QtQuick.Controls 1.4 as QtControls
 
@@ -132,7 +131,7 @@ Row {
       {"currentNews": feedRow.model.get(currentIndex),
       "movementDuration": getDuration(),
       "animate": feedRow.animate,
-      "numberOfNews:": feedRow.model.count,
+      "numberOfNews": feedRow.model.count,
       "currentNewsNumber": feedRow.currentIndex + 1,
       "iconSource": feedRow.model.source,
       "feedTitle": feedRow.titleModel.get(0).feedTitle
@@ -207,7 +206,7 @@ Row {
       "x": news.x + (direction * news.width),
       "movementDuration": getDuration(),
       "animate": feedRow.animate,
-      "numberOfNews:": feedRow.model.count,
+      "numberOfNews": feedRow.model.count,
       "currentNewsNumber": feedRow.currentIndex + 1,
       "iconSource": feedRow.model.source,
       "feedTitle": feedRow.titleModel.get(0).feedTitle
