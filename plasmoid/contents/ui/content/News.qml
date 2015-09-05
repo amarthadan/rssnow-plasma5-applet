@@ -12,10 +12,16 @@ Item{
   property int currentNewsNumber
   property var currentNews
   property int movementDuration
+  property var iconSource
 
   Rectangle{
     anchors.fill: parent
     color: theme.backgroundColor
+  }
+
+  Image{
+    id: icon
+    source: "http://www.google.com/s2/favicons?domain=" + iconSource
   }
 
   Label{

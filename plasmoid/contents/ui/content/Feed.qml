@@ -23,7 +23,7 @@ Row {
 
   QtControls.BusyIndicator {
     anchors.fill: parent
-    running: parent.model.status != XmlListModel.Ready
+    running: !feedReady()
   }
 
   Image{
@@ -121,18 +121,24 @@ Row {
   }
 
   function createNewsIfModelLoaded(){
-    if(model.status != XmlListModel.Ready){
+    if(!feedReady()){
       modelLoadTimer.running = true;
-    }else{
-      var newsComponent = Qt.createComponent("News.qml");
-      feedRow.news = newsComponent.createObject(feedRow,
-        {"currentNews": feedRow.model.get(currentIndex),
-        "movementDuration": getDuration(),
-        "animate": feedRow.animate,
-        "numberOfNews:": feedRow.model.count,
-        "currentNewsNumber": feedRow.currentIndex + 1
-      });
+      return;
     }
+
+    var newsComponent = Qt.createComponent("News.qml");
+    feedRow.news = newsComponent.createObject(feedRow,
+      {"currentNews": feedRow.model.get(currentIndex),
+      "movementDuration": getDuration(),
+      "animate": feedRow.animate,
+      "numberOfNews:": feedRow.model.count,
+      "currentNewsNumber": feedRow.currentIndex + 1,
+      "iconSource": feedRow.model.source
+    });
+  }
+
+  function feedReady(){
+    return (model.status == XmlListModel.Ready)
   }
 
   function moveNext(){
@@ -200,7 +206,8 @@ Row {
       "movementDuration": getDuration(),
       "animate": feedRow.animate,
       "numberOfNews:": feedRow.model.count,
-      "currentNewsNumber": feedRow.currentIndex + 1
+      "currentNewsNumber": feedRow.currentIndex + 1,
+      "iconSource": feedRow.model.source
     });
 
     return newNews;
