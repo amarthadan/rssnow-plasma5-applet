@@ -13,6 +13,7 @@ Item{
   property var currentNews
   property int movementDuration
   property var iconSource
+  property var feedTitle
 
   Rectangle{
     anchors.fill: parent
@@ -28,6 +29,13 @@ Item{
     id: newsText
     anchors.fill: parent
     text: parent.currentNews.title
+    wrapMode: Text.WordWrap
+  }
+
+  Label{
+    id: title
+    anchors.fill: parent
+    text: parent.feedTitle
     wrapMode: Text.WordWrap
   }
 

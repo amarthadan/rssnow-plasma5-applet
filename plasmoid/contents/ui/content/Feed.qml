@@ -9,6 +9,7 @@ Row {
   width: parent.width
 
   property var model
+  property var titleModel
   property bool animate: true
   property var news
   property int currentIndex: 0
@@ -133,12 +134,13 @@ Row {
       "animate": feedRow.animate,
       "numberOfNews:": feedRow.model.count,
       "currentNewsNumber": feedRow.currentIndex + 1,
-      "iconSource": feedRow.model.source
+      "iconSource": feedRow.model.source,
+      "feedTitle": feedRow.titleModel.get(0).feedTitle
     });
   }
 
   function feedReady(){
-    return (model.status == XmlListModel.Ready)
+    return (model.status == XmlListModel.Ready && titleModel.status == XmlListModel.Ready)
   }
 
   function moveNext(){
@@ -207,7 +209,8 @@ Row {
       "animate": feedRow.animate,
       "numberOfNews:": feedRow.model.count,
       "currentNewsNumber": feedRow.currentIndex + 1,
-      "iconSource": feedRow.model.source
+      "iconSource": feedRow.model.source,
+      "feedTitle": feedRow.titleModel.get(0).feedTitle
     });
 
     return newNews;

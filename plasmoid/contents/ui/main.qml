@@ -64,9 +64,15 @@ Item{
           query: "/rss/channel/item"
 
           XmlRole { name: "title"; query: "title/string()" }
-          XmlRole { name: "description"; query: "fn:replace(description/string(), '\&lt;a href=.*\/a\&gt;', '')" }
           XmlRole { name: "link"; query: "link/string()" }
-          XmlRole { name: "pubDate"; query: "pubDate/string()" }
+          XmlRole { name: "pubDate"; query: "pubDate/string()"; isKey: true }
+        }
+        
+        titleModel: XmlListModel {
+          source: modelData
+          query: "/rss/channel"
+
+          XmlRole { name: "feedTitle"; query: "title/string()" }
         }
 
         Timer{
