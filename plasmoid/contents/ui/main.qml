@@ -67,26 +67,31 @@ Item{
           XmlRole { name: "link"; query: "link/string()" }
           XmlRole { name: "pubDate"; query: "pubDate/string()"; isKey: true }
         }
-        
+
         titleModel: XmlListModel {
           source: modelData
           query: "/rss/channel"
 
           XmlRole { name: "feedTitle"; query: "title/string()" }
         }
-
-        Timer{
-          id: switchTimer
-          interval: switchInterval * 1000
-          running: true
-          repeat: true
-          onTriggered: moveNext()
-        }
       }
+    }
+  }
+
+  Timer{
+    id: switchTimer
+    interval: switchInterval * 1000
+    running: true
+    repeat: true
+    onTriggered: switchFeeds()
+  }
+
+  function switchFeeds(){
+    for(var i=0; i<repeater.count; i++){
+      repeater.itemAt(i).moveNext();
     }
   }
 }
 
 //TODO:
 //add drop target
-//make all the feeds switch news at the same time
