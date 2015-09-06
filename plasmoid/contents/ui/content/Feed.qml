@@ -16,6 +16,7 @@ Row {
   property int delayedPrev: 0
   property int delayedNext: 0
   property int animationDuration: 500
+  property var hovered: false
 
   Component.onCompleted: {
     createNewsIfModelLoaded();
@@ -76,10 +77,12 @@ Row {
       Qt.openUrlExternally(parent.model.get(currentIndex).link);
     }
     onEntered: {
+      hovered = true;
       rightArrow.opacity = 1;
       leftArrow.opacity = 1;
     }
     onExited: {
+      hovered = false;
       rightArrow.opacity = 0;
       leftArrow.opacity = 0;
     }
@@ -142,9 +145,14 @@ Row {
     return (model.status == XmlListModel.Ready && titleModel.status == XmlListModel.Ready)
   }
 
-  function moveNext(){
+  function moveNext(timerSwitch){
     if(isAnimating){
       delayedNext++;
+      return;
+    }
+
+    timerSwitch = typeof timerSwitch !== 'undefined' ? timerSwitch : false;
+    if(hovered && timerSwitch){
       return;
     }
 
@@ -217,5 +225,4 @@ Row {
 }
 
 //TODO:
-//stop switch timer when mouse hovers over feed
 //fix anchor errors

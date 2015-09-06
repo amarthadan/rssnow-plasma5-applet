@@ -88,7 +88,7 @@ Item{
 
   function switchFeeds(){
     for(var i=0; i<repeater.count; i++){
-      repeater.itemAt(i).moveNext();
+      repeater.itemAt(i).moveNext(true);
     }
   }
 }
