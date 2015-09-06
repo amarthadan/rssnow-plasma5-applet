@@ -39,6 +39,7 @@ Item{
         }
 
         Label{
+          id: feedTitle
           Layout.fillWidth: true
           text: news.feedTitle
           wrapMode: Text.WordWrap
@@ -62,9 +63,44 @@ Item{
       duration: movementDuration
     }
   }
+
+  function feedTitleToFuzzyDate(){
+    var dateString = currentNews.pubDate.substring(0, currentNews.pubDate.lastIndexOf(" "));
+    feedTitle.text = dateToFuzzyDate(Date.fromLocaleString(Qt.locale("en"), dateString, "ddd, dd MMM yyyy hh:mm:ss"));
+  }
+
+  function feedTitleToFeedTitle(){
+    feedTitle.text = news.feedTitle;
+  }
+
+  function dateToFuzzyDate(date){
+    var nowDate = new Date()
+    var nowMS = nowDate.getTime();
+    var dateMS = date.getTime();
+
+    nowDate.setMilliseconds(0);
+    nowDate.setSeconds(0);
+    nowDate.setMinutes(0);
+    nowDate.setHours(0);
+    date.setMilliseconds(0);
+    date.setSeconds(0);
+    date.setMinutes(0);
+    date.setHours(0);
+
+    if (nowMS < (dateMS + 3600000)) {
+      return i18np("%1 minute ago", "%1 minutes ago", (Math.floor((nowMS - dateMS)/60000)));
+    } else if (+nowDate === +date.setDate(date.getDate() + 1)) {
+      return i18n("yesterday");
+    } else if (nowDate < date) {
+      return i18np("%1 hour ago", "%1 hours ago", (Math.floor((nowMS - dateMS)/3600000)));
+    } else if (nowDate < date.setDate(date.getDate() + 6)) {
+      return i18np("%1 day ago", "%1 days ago", (Math.floor((nowMS - dateMS)/86400000)));
+    } else {
+      return i18np("%1 week ago", "%1 weeks ago", (Math.floor((nowMS - dateMS)/604800000)));
+    }
+  }
 }
 
 //TODO:
 //states for animation
 //dummy icon when no icon available and while loading
-//change feed title to date info on hover

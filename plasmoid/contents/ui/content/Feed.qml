@@ -77,11 +77,13 @@ Row {
       Qt.openUrlExternally(parent.model.get(currentIndex).link);
     }
     onEntered: {
+      news.feedTitleToFuzzyDate();
       hovered = true;
       rightArrow.opacity = 1;
       leftArrow.opacity = 1;
     }
     onExited: {
+      news.feedTitleToFeedTitle();
       hovered = false;
       rightArrow.opacity = 0;
       leftArrow.opacity = 0;
@@ -219,6 +221,10 @@ Row {
       "iconSource": feedRow.model.source,
       "feedTitle": feedRow.titleModel.get(0).feedTitle
     });
+
+    if(hovered){
+      newNews.feedTitleToFuzzyDate();
+    }
 
     return newNews;
   }
