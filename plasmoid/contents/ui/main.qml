@@ -75,13 +75,27 @@ Item{
     interval: switchInterval * 1000
     running: true
     repeat: true
-    onTriggered: switchFeeds()
+    onTriggered: switchFeed(0)
   }
 
-  function switchFeeds(){
-    for(var i=0; i<feeds.length; i++){
-      feeds[i].moveNext(true);
+  function switchFeed(feedIndex){
+    if(feedIndex >= feeds.length){
+      return;
     }
+
+    var timerString = 'import QtQuick 2.0;\
+    Timer{\
+      interval: 200;\
+      running: true;\
+      repeat: false;\
+      onTriggered: moveFeed(' + feedIndex + ');\
+    }';
+    Qt.createQmlObject(timerString, mainWindow, "timerDynamic");
+  }
+
+  function moveFeed(feedIndex){
+    feeds[feedIndex].moveNext(true);
+    switchFeed(++feedIndex);
   }
 
   function splitSourceList(){
@@ -136,4 +150,4 @@ Item{
 
 //TODO:
 //add drop target
-//cascading news switch
+//update interval for feeds
