@@ -1,7 +1,6 @@
 import QtQuick 2.0
-import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.draganddrop 2.0 as DragAndDrop
-import QtQuick.XmlListModel 2.0
+import QtQuick.Layouts 1.2
 import "./content"
 
 Item{
@@ -10,6 +9,8 @@ Item{
   height: 200
   clip: true
 
+  Layout.minimumWidth: 175
+
   property string sourceList: plasmoid.configuration.feedList
   property var individualSources
   property int updateInterval: plasmoid.configuration.updateInterval
@@ -17,20 +18,34 @@ Item{
   property bool showLogo: plasmoid.configuration.logo
   property bool showDropTarget: plasmoid.configuration.dropTarget
   property bool animations: plasmoid.configuration.animations
+  property var feeds: []
 
   Component.onCompleted: {
-    individualSources = sourceList.split(',');
+    splitSourceList();
+    setMinimumHeight();
+    createFeeds();
   }
 
-  Column {
-    id: feeds
+  onSourceListChanged: {
+    splitSourceList();
+    setMinimumHeight();
+    deleteFeeds();
+    createFeeds();
+  }
+
+  onShowLogoChanged: {
+    setMinimumHeight();
+  }
+
+  ColumnLayout {
+    id: feedsLayout
     anchors.fill: parent
 
     Image{
       id: logoImage
       source: "img/rssnow.svgz"
-      width: sourceSize.width / 1.5
-      height: sourceSize.height / 1.5
+      width: 192
+      height: 100
 
       states: [
       State {
@@ -39,6 +54,7 @@ Item{
         PropertyChanges {
           target: logoImage
           visible: true
+          height: 100
         }
       },
       State {
@@ -47,34 +63,10 @@ Item{
         PropertyChanges {
           target: logoImage
           visible: false
+          height: 0
         }
       }
       ]
-    }
-
-    Repeater {
-      id: repeater
-      model: individualSources
-
-      Feed{
-        height: (feeds.height - logoImage.height)/mainWindow.individualSources.length
-        animate: mainWindow.animations
-        model: XmlListModel {
-          source: modelData
-          query: "/rss/channel/item"
-
-          XmlRole { name: "title"; query: "title/string()" }
-          XmlRole { name: "link"; query: "link/string()" }
-          XmlRole { name: "pubDate"; query: "pubDate/string()"; isKey: true }
-        }
-
-        titleModel: XmlListModel {
-          source: modelData
-          query: "/rss/channel"
-
-          XmlRole { name: "feedTitle"; query: "title/string()" }
-        }
-      }
     }
   }
 
@@ -87,11 +79,61 @@ Item{
   }
 
   function switchFeeds(){
-    for(var i=0; i<repeater.count; i++){
-      repeater.itemAt(i).moveNext(true);
+    for(var i=0; i<feeds.length; i++){
+      feeds[i].moveNext(true);
     }
+  }
+
+  function splitSourceList(){
+    individualSources = sourceList.split(',');
+  }
+
+  function setMinimumHeight(){
+    Layout.minimumHeight = (50 * individualSources.length);
+    if(showLogo){
+      Layout.minimumHeight = Layout.minimumHeight + 100;
+    }
+  }
+
+  function createFeeds(){
+    for(var i=0; i<individualSources.length; i++){
+      var feedString = 'import QtQuick 2.0;\
+      import QtQuick.XmlListModel 2.0;\
+      import QtQuick.Layouts 1.2;\
+      import "./content";\
+      Feed{\
+        Layout.fillWidth: true;\
+        Layout.fillHeight: true;\
+        Layout.alignment: Qt.AlignBottom;\
+        animate: mainWindow.animations;\
+        model: XmlListModel {\
+          source: "' + individualSources[i] + '";\
+          query: "/rss/channel/item";\
+          XmlRole { name: "title"; query: "title/string()" }\
+          XmlRole { name: "link"; query: "link/string()" }\
+          XmlRole { name: "pubDate"; query: "pubDate/string()"; isKey: true }\
+        }\
+        titleModel: XmlListModel {\
+          source: "' + individualSources[i] + '";\
+          query: "/rss/channel";\
+          XmlRole { name: "feedTitle"; query: "title/string()" }\
+        }\
+      }';
+      var feed = Qt.createQmlObject(feedString, feedsLayout, "feedDynamic");
+      feeds.push(feed);
+    }
+    switchTimer.running = true;
+  }
+
+  function deleteFeeds(){
+    switchTimer.running = false;
+    for(var i=0; i<feeds.length; i++){
+      feeds[i].destroy();
+    }
+    feeds = [];
   }
 }
 
 //TODO:
 //add drop target
+//cascading news switch
