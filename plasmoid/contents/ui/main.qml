@@ -90,7 +90,8 @@ Item{
       repeat: false;\
       onTriggered: moveFeed(' + feedIndex + ');\
     }';
-    Qt.createQmlObject(timerString, mainWindow, "timerDynamic");
+    var timer = Qt.createQmlObject(timerString, mainWindow, "timerDynamic");
+    timer.destroy(500);
   }
 
   function moveFeed(feedIndex){
