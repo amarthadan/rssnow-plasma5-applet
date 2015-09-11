@@ -20,6 +20,7 @@ Item{
   Rectangle{
     anchors.fill: parent
     color: theme.backgroundColor
+    clip: true
 
     ColumnLayout{
       anchors.fill: parent
