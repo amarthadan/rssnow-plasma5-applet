@@ -11,57 +11,103 @@ Item{
 
   Layout.minimumWidth: 175
 
+  property var feeds: []
   property string sourceList: plasmoid.configuration.feedList
-  property var individualSources
+  property var sources
   property int updateInterval: plasmoid.configuration.updateInterval
   property int switchInterval: plasmoid.configuration.switchInterval
   property bool showLogo: plasmoid.configuration.logo
   property bool showDropTarget: plasmoid.configuration.dropTarget
   property bool animations: plasmoid.configuration.animations
-  property var feeds: []
+  property bool userConfiguring: plasmoid.userConfiguring
+
+  onShowLogoChanged: setMinimumHeight()
+  onShowDropTargetChanged: setMinimumHeight()
 
   Component.onCompleted: {
-    splitSourceList();
+    sources = sourceList.split(',');
     setMinimumHeight();
     createFeeds();
   }
 
-  onSourceListChanged: {
-    splitSourceList();
-    setMinimumHeight();
-    deleteFeeds();
-    createFeeds();
-  }
+  onUserConfiguringChanged: {
+    if(userConfiguring){
+      return;
+    }
 
-  onShowLogoChanged: {
+    var newSources = sourceList.split(',');
+    if(!identicalSources(sources, newSources)){
+      sources = newSources;
+      deleteFeeds();
+      createFeeds();
+    }
     setMinimumHeight();
   }
 
   ColumnLayout {
-    id: feedsLayout
     anchors.fill: parent
 
-    Image{
-      id: logoImage
-      source: "img/rssnow.svgz"
-      width: 192
-      height: 100
+    ColumnLayout{
+      id: feedsLayout
+      Layout.fillWidth: true
+      Layout.fillHeight: true
+
+      Image{
+        id: logoImage
+        source: "img/rssnow.svgz"
+        width: 192
+        height: 100
+
+        states: [
+        State {
+          name: "showLogo"
+          when: showLogo
+          PropertyChanges {
+            target: logoImage
+            visible: true
+            height: 100
+          }
+        },
+        State {
+          name: "hideLogo"
+          when: !showLogo
+          PropertyChanges {
+            target: logoImage
+            visible: false
+            height: 0
+          }
+        }
+        ]
+      }
+    }
+
+    DropTarget{
+      id: dropTarget
+      Layout.fillWidth: true
+      height: 50
+
+      DragAndDrop.DropArea {
+        anchors.fill: parent
+        onDrop: {
+          addFeed(event.mimeData.url);
+        }
+      }
 
       states: [
       State {
-        name: "show"
-        when: showLogo
+        name: "showDropTarget"
+        when: showDropTarget
         PropertyChanges {
-          target: logoImage
+          target: dropTarget
           visible: true
-          height: 100
+          height: 50
         }
       },
       State {
-        name: "hide"
-        when: !showLogo
+        name: "hideDropTarget"
+        when: !showDropTarget
         PropertyChanges {
-          target: logoImage
+          target: dropTarget
           visible: false
           height: 0
         }
@@ -99,42 +145,48 @@ Item{
     switchFeed(++feedIndex);
   }
 
-  function splitSourceList(){
-    individualSources = sourceList.split(',');
-  }
-
   function setMinimumHeight(){
-    Layout.minimumHeight = (50 * individualSources.length);
+    if(typeof sources == 'undefined'){
+      return;
+    }
+
+    Layout.minimumHeight = (50 * sources.length);
     if(showLogo){
       Layout.minimumHeight = Layout.minimumHeight + 100;
     }
+    if(showDropTarget){
+      Layout.minimumHeight = Layout.minimumHeight + 50;
+    }
+  }
+
+  function createFeed(source){
+    var feedString = 'import QtQuick 2.0;\
+    import QtQuick.XmlListModel 2.0;\
+    import QtQuick.Layouts 1.2;\
+    import "./content";\
+    Feed{\
+      Layout.fillWidth: true;\
+      Layout.fillHeight: true;\
+      animate: mainWindow.animations;\
+      model: XmlListModel {\
+        source: "' + source + '";\
+        query: "/rss/channel/item";\
+        XmlRole { name: "title"; query: "title/string()" }\
+        XmlRole { name: "link"; query: "link/string()" }\
+        XmlRole { name: "pubDate"; query: "pubDate/string()"; isKey: true }\
+      }\
+      titleModel: XmlListModel {\
+        source: "' + source + '";\
+        query: "/rss/channel";\
+        XmlRole { name: "feedTitle"; query: "title/string()" }\
+      }\
+    }';
+    return Qt.createQmlObject(feedString, feedsLayout, "feedDynamic");
   }
 
   function createFeeds(){
-    for(var i=0; i<individualSources.length; i++){
-      var feedString = 'import QtQuick 2.0;\
-      import QtQuick.XmlListModel 2.0;\
-      import QtQuick.Layouts 1.2;\
-      import "./content";\
-      Feed{\
-        Layout.fillWidth: true;\
-        Layout.fillHeight: true;\
-        Layout.alignment: Qt.AlignBottom;\
-        animate: mainWindow.animations;\
-        model: XmlListModel {\
-          source: "' + individualSources[i] + '";\
-          query: "/rss/channel/item";\
-          XmlRole { name: "title"; query: "title/string()" }\
-          XmlRole { name: "link"; query: "link/string()" }\
-          XmlRole { name: "pubDate"; query: "pubDate/string()"; isKey: true }\
-        }\
-        titleModel: XmlListModel {\
-          source: "' + individualSources[i] + '";\
-          query: "/rss/channel";\
-          XmlRole { name: "feedTitle"; query: "title/string()" }\
-        }\
-      }';
-      var feed = Qt.createQmlObject(feedString, feedsLayout, "feedDynamic");
+    for(var i=0; i<sources.length; i++){
+      var feed = createFeed(sources[i]);
       feeds.push(feed);
     }
     switchTimer.running = true;
@@ -147,8 +199,43 @@ Item{
     }
     feeds = [];
   }
+
+  function addFeed(url){
+    sources.push(url);
+    plasmoid.configuration.feedList = sources.toString();
+    setMinimumHeight();
+    var feed = createFeed(url);
+    feeds.push(feed);
+
+    forceLayoutReload();
+  }
+
+  //hack to force layout reloading so newly added feed will be displayed immediately
+  function forceLayoutReload(){
+    var dummyItemString = 'import QtQuick 2.0;\
+    import QtQuick.Layouts 1.2;\
+    Item{\
+      Layout.fillWidth: true;\
+      Layout.fillHeight: true;\
+    }';
+    var dummyItem = Qt.createQmlObject(dummyItemString, feedsLayout, "dummyItemDynamic");
+    dummyItem.destroy(5);
+  }
+
+  function identicalSources(oldSources, newSources){
+    if(oldSources.length != newSources.length){
+      return false;
+    }
+
+    for(var i=0; i<oldSources.length; i++){
+      if(oldSources[i] != newSources[i]){
+        return false;
+      }
+    }
+
+    return true;
+  }
 }
 
 //TODO:
-//add drop target
 //update interval for feeds
