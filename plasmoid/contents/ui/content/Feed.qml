@@ -3,8 +3,8 @@ import QtQuick.XmlListModel 2.0
 import org.kde.plasma.components 2.0 as PlasmaComponents
 import QtQuick.Controls 1.4 as QtControls
 
-Row {
-  id: feedRow
+Item {
+  id: feed
   width: parent.width
 
   property var model
@@ -23,8 +23,9 @@ Row {
   }
 
   QtControls.BusyIndicator {
+    id: indicator
     anchors.fill: parent
-    running: !feedReady()
+    running: true
   }
 
   Image{
@@ -131,15 +132,17 @@ Row {
       return;
     }
 
+    indicator.running = false;
+
     var newsComponent = Qt.createComponent("News.qml");
-    feedRow.news = newsComponent.createObject(feedRow,
-      {"currentNews": feedRow.model.get(currentIndex),
+    feed.news = newsComponent.createObject(feed,
+      {"currentNews": feed.model.get(currentIndex),
       "movementDuration": getDuration(),
-      "animate": feedRow.animate,
-      "numberOfNews": feedRow.model.count,
-      "currentNewsNumber": feedRow.currentIndex + 1,
-      "iconSource": feedRow.model.source,
-      "feedTitle": feedRow.titleModel.get(0).feedTitle
+      "animate": feed.animate,
+      "numberOfNews": feed.model.count,
+      "currentNewsNumber": feed.currentIndex + 1,
+      "iconSource": feed.model.source,
+      "feedTitle": feed.titleModel.get(0).feedTitle
     });
   }
 
@@ -148,12 +151,15 @@ Row {
   }
 
   function moveNext(timerSwitch){
+    timerSwitch = typeof timerSwitch !== 'undefined' ? timerSwitch : false;
+
     if(isAnimating){
-      delayedNext++;
+      if(!timerSwitch){
+        delayedNext++;
+      }
       return;
     }
 
-    timerSwitch = typeof timerSwitch !== 'undefined' ? timerSwitch : false;
     if(hovered && timerSwitch){
       return;
     }
@@ -211,15 +217,15 @@ Row {
 
   function createNewNews(direction, duration){
     var newsComponent = Qt.createComponent("News.qml");
-    var newNews = newsComponent.createObject(feedRow,
-      {"currentNews": feedRow.model.get(currentIndex),
+    var newNews = newsComponent.createObject(feed,
+      {"currentNews": feed.model.get(currentIndex),
       "x": news.x + (direction * news.width),
       "movementDuration": getDuration(),
-      "animate": feedRow.animate,
-      "numberOfNews": feedRow.model.count,
-      "currentNewsNumber": feedRow.currentIndex + 1,
-      "iconSource": feedRow.model.source,
-      "feedTitle": feedRow.titleModel.get(0).feedTitle
+      "animate": feed.animate,
+      "numberOfNews": feed.model.count,
+      "currentNewsNumber": feed.currentIndex + 1,
+      "iconSource": feed.model.source,
+      "feedTitle": feed.titleModel.get(0).feedTitle
     });
 
     if(hovered){
@@ -229,6 +235,3 @@ Row {
     return newNews;
   }
 }
-
-//TODO:
-//fix anchor errors
