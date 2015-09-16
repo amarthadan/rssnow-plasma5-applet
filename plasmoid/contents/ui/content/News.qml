@@ -61,9 +61,29 @@ Item{
 
   Behavior on x {
     NumberAnimation {
+      id: moveAnimation
       duration: movementDuration
     }
   }
+
+  states: [
+  State {
+    name: "animate"
+    when: animate
+    PropertyChanges {
+      target: moveAnimation
+      duration: movementDuration
+    }
+  },
+  State {
+    name: "dontAnimate"
+    when: !animate
+    PropertyChanges {
+      target: moveAnimation
+      duration: 0
+    }
+  }
+  ]
 
   function feedTitleToFuzzyDate(){
     var dateString = currentNews.pubDate.substring(0, currentNews.pubDate.lastIndexOf(" "));
@@ -103,5 +123,4 @@ Item{
 }
 
 //TODO:
-//states for animation
 //dummy icon when no icon available and while loading

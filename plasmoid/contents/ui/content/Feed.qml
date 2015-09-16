@@ -18,6 +18,10 @@ Item {
   property int animationDuration: 500
   property var hovered: false
 
+  onAnimateChanged: {
+    news.animate = animate
+  }
+
   Component.onCompleted: {
     createNewsIfModelLoaded();
   }
