@@ -124,6 +124,14 @@ Item{
     onTriggered: switchFeed(0)
   }
 
+  Timer{
+    id: updateTimer
+    interval: updateInterval * 60000
+    running:true
+    repeat: true
+    onTriggered: reloadFeeds()
+  }
+
   function switchFeed(feedIndex){
     if(feedIndex >= feeds.length){
       return;
@@ -138,6 +146,13 @@ Item{
     }';
     var timer = Qt.createQmlObject(timerString, mainWindow, "timerDynamic");
     timer.destroy(500);
+  }
+
+  function reloadFeeds(){
+    for(var i=0; i<feeds.length; i++){
+      feeds[i].model.reload();
+      feeds[i].titleModel.reload();
+    }
   }
 
   function moveFeed(feedIndex){
@@ -178,7 +193,7 @@ Item{
       titleModel: XmlListModel {\
         source: "' + source + '";\
         query: "/rss/channel";\
-        XmlRole { name: "feedTitle"; query: "title/string()" }\
+        XmlRole { name: "feedTitle"; query: "title/string()"; isKey: true }\
       }\
     }';
     return Qt.createQmlObject(feedString, feedsLayout, "feedDynamic");
@@ -236,6 +251,3 @@ Item{
     return true;
   }
 }
-
-//TODO:
-//update interval for feeds
