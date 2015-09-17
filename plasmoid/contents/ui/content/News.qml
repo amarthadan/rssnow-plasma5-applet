@@ -30,7 +30,9 @@ Item{
         Layout.fillWidth: true
 
         Image{
-          source: "http://www.google.com/s2/favicons?domain=" + news.iconSource
+          source: news.iconSource
+          height: 16
+          width: 16
         }
 
         Label{
@@ -121,6 +123,3 @@ Item{
     }
   }
 }
-
-//TODO:
-//dummy icon when no icon available and while loading
