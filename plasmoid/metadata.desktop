@@ -1,17 +1,18 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=RSSNOW
-Comment=
+Comment=Show news from various sources
 Type=Service
-X-KDE-ParentApp=
+Icon=application-rss+xml
+X-KDE-Library=plasma_applet_rssnow
 X-KDE-PluginInfo-Author=Michal Kimle
 X-KDE-PluginInfo-Email=kimle.michal@gmail.com
 X-KDE-PluginInfo-License=GPL
 X-KDE-PluginInfo-Name=rssnow
-X-KDE-PluginInfo-Version=2.0
-X-KDE-PluginInfo-Website=plasma.kde.org
+X-KDE-PluginInfo-Version=1.0
+X-KDE-PluginInfo-Website=https://github.com/Misenko/rssnow-plasma5-applet
 X-KDE-ServiceTypes=Plasma/Applet
 X-Plasma-API=declarativeappletscript
 X-Plasma-MainScript=ui/main.qml
 X-Plasma-RemoteLocation=
-X-KDE-PluginInfo-Category=Windows and Tasks
+X-KDE-PluginInfo-Category=Online Services
