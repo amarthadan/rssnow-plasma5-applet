@@ -4,7 +4,13 @@ import org.kde.plasma.components 2.0 as PlasmaComponents
 import QtQuick.Controls 1.4 as QtControls
 import "./HttpHelper.js" as HttpHelper
 
-Item {
+/*
+FIXME
+Should not be of type Row because it produces many anchor warnings. But without
+the Row type, adding feeds via Drop feed doesn't resize feeds after adding a new
+one.
+*/
+Row {
   id: feed
   width: parent.width
 
