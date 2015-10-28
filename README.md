@@ -3,7 +3,7 @@ This is a rewrite of RSSNOW plasmoid/applet compatible with Plasma 5
 
 ## Installation
 ### Arch Linux
-Package for Arch Linux will be available shortly in [AUR](https://aur.archlinux.org/).
+Package [plasma5-applet-rssnow-git](https://aur.archlinux.org/packages/plasma5-applets-rssnow-git/) is available in [AUR](https://aur.archlinux.org/).
 
 ### Manual
 ##### Requirements
