@@ -4,7 +4,6 @@ Name=RSSNOW
 Comment=Show news from various sources
 Type=Service
 Icon=application-rss+xml
-X-KDE-Library=plasma_applet_rssnow
 X-KDE-PluginInfo-Author=Michal Kimle
 X-KDE-PluginInfo-Email=kimle.michal@gmail.com
 X-KDE-PluginInfo-License=GPL
