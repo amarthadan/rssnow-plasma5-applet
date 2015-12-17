@@ -20,6 +20,7 @@ Item{
   property bool showDropTarget: plasmoid.configuration.dropTarget
   property bool animations: plasmoid.configuration.animations
   property bool userConfiguring: plasmoid.userConfiguring
+  property bool showLighText: plasmoid.configuration.lightText
 
   onShowLogoChanged: setMinimumHeight()
   onShowDropTargetChanged: setMinimumHeight()

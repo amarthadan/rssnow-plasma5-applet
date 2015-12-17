@@ -38,7 +38,6 @@ Item{
         Label{
           text: "(" + news.currentNewsNumber + "/" + news.numberOfNews + ")"
           wrapMode: Text.WordWrap
-          font.bold: true
         }
 
         Label{
