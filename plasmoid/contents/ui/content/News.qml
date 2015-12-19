@@ -16,6 +16,7 @@ Item{
   property int movementDuration
   property var iconSource
   property var feedTitle
+  property var feedColor
 
   Rectangle{
     anchors.fill: parent
@@ -37,7 +38,9 @@ Item{
 
         Label{
           text: "(" + news.currentNewsNumber + "/" + news.numberOfNews + ")"
+          color: news.feedColor
           wrapMode: Text.WordWrap
+
         }
 
         Label{
@@ -45,6 +48,7 @@ Item{
           Layout.fillWidth: true
           text: news.feedTitle
           wrapMode: Text.WordWrap
+          color: news.feedColor
           font.bold: true
         }
       }
@@ -55,6 +59,7 @@ Item{
           Layout.fillWidth: true
           text: news.currentNews.title
           wrapMode: Text.WordWrap
+          color: news.feedColor
         }
       }
     }
