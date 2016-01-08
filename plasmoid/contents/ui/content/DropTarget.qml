@@ -6,7 +6,8 @@ import org.kde.plasma.core 2.0 as PlasmaCore
 
 Item{
   id: dropTarget
-
+  property alias dropTitle: title
+  property alias dropText: txt
   Rectangle{
     anchors.fill: parent
     color: theme.backgroundColor
@@ -26,6 +27,7 @@ Item{
         Layout.alignment: Qt.AlignVCenter
 
         Label{
+          id: title
           Layout.fillWidth: true
           text: "Drop a feed here..."
           wrapMode: Text.WordWrap
@@ -33,6 +35,7 @@ Item{
         }
 
         Label{
+          id: txt
           Layout.fillWidth: true
           text: "...to add one more entry!"
           wrapMode: Text.WordWrap

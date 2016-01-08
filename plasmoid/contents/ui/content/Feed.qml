@@ -142,6 +142,8 @@ Row {
 
   function getFontColor(){
     if (lightText){
+      dropTarget.dropTitle.color = "lightgray"
+      dropTarget.dropText.color = "lightgray"
       return "lightgray"
     } else {
       return "black"
