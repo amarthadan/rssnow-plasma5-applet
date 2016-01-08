@@ -10,6 +10,7 @@ Item {
   property alias cfg_dropTarget: dropTargetCheckBox.checked
   property alias cfg_logo: logoCheckBox.checked
   property alias cfg_animations: animationsCheckBox.checked
+  property alias cfg_lightText: lightTextCheckBox.checked
 
   property alias cfg_updateInterval: updateInterval.value
   property alias cfg_switchInterval: switchInterval.value
@@ -40,6 +41,12 @@ Item {
           id: animationsCheckBox
           text: i18n("Animations")
         }
+
+        QtControls.CheckBox {
+          id: lightTextCheckBox
+          text: i18n("Show light text")
+        }
+
       }
     }
 

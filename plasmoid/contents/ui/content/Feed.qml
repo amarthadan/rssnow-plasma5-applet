@@ -23,6 +23,7 @@ Row {
   property int delayedPrev: 0
   property int delayedNext: 0
   property int animationDuration: 500
+  property bool lightText: false
   property var hovered: false
   property var iconSource
 
@@ -139,6 +140,16 @@ Row {
     return animationDuration/(Math.max(delayedPrev+1, delayedNext+1));
   }
 
+  function getFontColor(){
+    if (lightText){
+      dropTarget.dropTitle.color = "lightgray"
+      dropTarget.dropText.color = "lightgray"
+      return "lightgray"
+    } else {
+      return "black"
+    }
+  }
+
   function createNewsIfModelLoaded(){
     if(!feedReady()){
       modelLoadTimer.running = true;
@@ -155,8 +166,10 @@ Row {
       "numberOfNews": feed.model.count,
       "currentNewsNumber": feed.currentIndex + 1,
       "iconSource": feed.iconSource,
-      "feedTitle": feed.titleModel.get(0).feedTitle
+      "feedTitle": feed.titleModel.get(0).feedTitle,
+      "feedColor": getFontColor()
     });
+
   }
 
   function feedReady(){
@@ -238,8 +251,10 @@ Row {
       "numberOfNews": feed.model.count,
       "currentNewsNumber": feed.currentIndex + 1,
       "iconSource": feed.iconSource,
-      "feedTitle": feed.titleModel.get(0).feedTitle
+      "feedTitle": feed.titleModel.get(0).feedTitle,
+      "feedColor": getFontColor()
     });
+
 
     if(hovered){
       newNews.feedTitleToFuzzyDate();

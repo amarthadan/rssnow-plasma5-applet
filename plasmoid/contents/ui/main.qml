@@ -20,6 +20,7 @@ Item{
   property bool showDropTarget: plasmoid.configuration.dropTarget
   property bool animations: plasmoid.configuration.animations
   property bool userConfiguring: plasmoid.userConfiguring
+  property bool lightText: plasmoid.configuration.lightText
 
   onShowLogoChanged: setMinimumHeight()
   onShowDropTargetChanged: setMinimumHeight()
@@ -34,7 +35,6 @@ Item{
     if(userConfiguring){
       return;
     }
-
     var newSources = sourceList.split(',');
     if(!identicalSources(sources, newSources)){
       sources = newSources;
@@ -183,6 +183,7 @@ Item{
       Layout.fillWidth: true;\
       Layout.fillHeight: true;\
       animate: mainWindow.animations;\
+      lightText: mainWindow.lightText;\
       model: XmlListModel {\
         source: "' + source + '";\
         query: "/rss/channel/item";\
